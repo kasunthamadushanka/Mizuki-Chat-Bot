@@ -1,6 +1,9 @@
 import os
 from pyrogram import filters, Client
 from sample_config import Config
+import aiofiles
+import aiohttp
+from random import randint
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 from google_trans_new import google_translator
 
@@ -12,6 +15,16 @@ BOT_ID = Config.BOT_ID
 bot = Client("MizukiChat", bot_token=BOT_TOKEN, api_id=6,
              api_hash="eb06d4abfb49dc3eeb1aeb98ae0f581e")
 print("\nMizuki Chatbot Started!\n")
+
+
+async def fetch(url):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            try:
+                data = await resp.json()
+            except:
+                data = await resp.text()
+    return data
 
 
 @bot.on_message(filters.text & ~filters.private & ~filters.edited & ~filters.bot & ~filters.via_bot & ~filters.channel & ~filters.forwarded)
